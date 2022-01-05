@@ -29,8 +29,8 @@ services:
         - "80:80" 
       depends_on:
         - app
-      networks:
-        - buscabelo-net
-networks:
-  buscabelo-net:
-    external: true
+      # networks:
+      #   - buscabelo-net
+# networks:
+#   buscabelo-net:
+#     external: true

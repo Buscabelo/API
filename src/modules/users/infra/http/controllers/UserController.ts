@@ -4,10 +4,10 @@ import { container } from 'tsyringe';
 import UpdateAvatarService from '@modules/users/services/UpdateAvatarService';
 
 export class UserController {
-  private static INSTANCE : UserController;
+  private static INSTANCE: UserController;
 
-  static getInstance(): UserController{
-    if (!UserController.INSTANCE){
+  static getInstance(): UserController {
+    if (!UserController.INSTANCE) {
       UserController.INSTANCE = new UserController();
     }
     return UserController.INSTANCE;
@@ -20,7 +20,7 @@ export class UserController {
         user_id: request.user.id,
         avatarFileName: request.file!.filename,
       });
-  
+
       return response.json({
         success: true,
         user: {
@@ -38,7 +38,5 @@ export class UserController {
         message: err.message,
       });
     }
-
   }
 }
-

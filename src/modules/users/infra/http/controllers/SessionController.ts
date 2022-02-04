@@ -6,16 +6,15 @@ import CreateCustomerService from '@modules/customers/services/CreateCustomerSer
 import GoogleAuthService from '@modules/customers/services/GoogleAuth';
 
 export class SessionController {
-  private static INSTANCE : SessionController;
- 
-  static getInstance(): SessionController{
-    if (!SessionController.INSTANCE){
+  private static INSTANCE: SessionController;
+
+  static getInstance(): SessionController {
+    if (!SessionController.INSTANCE) {
       SessionController.INSTANCE = new SessionController();
     }
     return SessionController.INSTANCE;
   }
 
-  
   async create(request: Request, response: Response) {
     try {
       const sessionService = container.resolve(SessionService);
@@ -43,43 +42,57 @@ export class SessionController {
     }
   }
 
-  async googleSignIn(request: Request, response: Response){
-    const {name, email} = request.body;
+  async googleSignIn(request: Request, response: Response) {
+    const { name, email } = request.body;
     const findCustomerService = container.resolve(GoogleAuthService);
     const createCustomerSerivce = container.resolve(CreateCustomerService);
     const sessionService = container.resolve(SessionService);
-    const currentUser = { email, password: ''};
-    
-    if(! await findCustomerService.execute(email)){
-      try{
-         const customer = await createCustomerSerivce.execute({
+    const currentUser = { email, password: '' };
+
+    if (! await findCustomerService.execute(email)) {
+      try {
+        const customer = await createCustomerSerivce.execute({
           name,
           email,
           password: ''
         });
         currentUser.email = customer.email
-        const {user, token} = await sessionService.execute(currentUser);
-        return response.status(200).json({success:true,user, token}); 
-      } catch (err){
-        
+        const { user, token } = await sessionService.execute(currentUser);
+        return response.status(200).json({
+          success: true,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            type: user.type
+          },
+          token
+        });
+      } catch (err) {
         return response.status(400).json({
-          success:false,
-          error : err.message});
-      }  
-
+          success: false,
+          error: err.message
+        });
+      }
     }
-    try{
-      const {user, token} = await sessionService.execute(currentUser);
-      return response.status(200).json({success:true,user, token}); 
-    }catch(err){
-      console.log(err);
+
+    try {
+      const { user, token } = await sessionService.execute(currentUser);
+      return response.status(200).json({
+        success: true,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          type: user.type
+        },
+        token
+      });
+    } catch (err) {
       return response.status(400).json({
-        success:false,
-        error : err.message});
+        success: false,
+        error: err.message
+      });
     }
-    
-    }
-    
   }
-
-
+}

@@ -9,10 +9,10 @@ import UpdateServiceManager from '@modules/services/managers/UpdateServiceManage
 import CreateServiceManager from '@modules/services/managers/CreateServiceManager';
 
 export class ServiceController {
-  private static INSTANCE : ServiceController;
+  private static INSTANCE: ServiceController;
 
-  static getInstance(): ServiceController{
-    if (!ServiceController.INSTANCE){
+  static getInstance(): ServiceController {
+    if (!ServiceController.INSTANCE) {
       ServiceController.INSTANCE = new ServiceController();
     }
     return ServiceController.INSTANCE;
@@ -130,7 +130,6 @@ export class ServiceController {
           }
         }
       });
-
     } catch (err) {
       return response.status(400).json({
         success: false,
@@ -153,7 +152,17 @@ export class ServiceController {
 
       return response.status(200).json({
         success: true,
-        service: service
+        service: {
+          id: service?.id,
+          name: service?.name,
+          description: service?.description,
+          value: service?.value,
+          type: service?.type,
+          provider: {
+            id: service?.provider.id,
+            name: service?.provider.name,
+          }
+        }
       });
     } catch (err) {
       return response.status(400).json({
@@ -171,9 +180,18 @@ export class ServiceController {
 
       return response.status(200).json({
         success: true,
-        service: service
+        service: {
+          id: service?.id,
+          name: service?.name,
+          description: service?.description,
+          value: service?.value,
+          type: service?.type,
+          provider: {
+            id: service?.provider.id,
+            name: service?.provider.name,
+          }
+        }
       });
-
     } catch (err) {
       return response.status(400).json({
         success: false,

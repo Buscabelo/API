@@ -9,10 +9,10 @@ import FindServicesByProviderService from '@modules/providers/services/FindServi
 import GetAllProvidersService from '@modules/providers/services/GetAllProvidersService';
 
 export class ProviderController {
-  private static INSTANCE : ProviderController;
-  
-   static getInstance(): ProviderController{
-    if (!ProviderController.INSTANCE){
+  private static INSTANCE: ProviderController;
+
+  static getInstance(): ProviderController {
+    if (!ProviderController.INSTANCE) {
       ProviderController.INSTANCE = new ProviderController();
     }
     return ProviderController.INSTANCE;
@@ -27,14 +27,12 @@ export class ProviderController {
         success: true,
         providers: providers?.map(provider => ({
           id: provider.id,
-          type:'provider',
           name: provider.name,
           address: provider.address,
           description: provider.description,
           email: provider.email,
           rating: provider.rating_average
-        })
-        )
+        }))
       });
     } catch (err) {
       return response.status(400).json({
@@ -53,14 +51,12 @@ export class ProviderController {
       return response.status(200).json({
         success: true,
         providers: providers?.map(provider => ({
-          type: 'provider',
           name: provider.name,
           address: provider.address,
           description: provider.description,
           email: provider.email,
           rating: provider.rating_average
-        })
-        )
+        }))
       });
     } catch (err) {
       return response.status(400).json({
@@ -74,13 +70,11 @@ export class ProviderController {
     try {
       const { id } = request.params;
       const providerService = container.resolve(FindProviderByIdService);
-
       const provider = await providerService.execute(id);
 
       return response.status(200).json({
         success: true,
         provider: {
-          type:'provider',
           name: provider.name,
           address: provider.address,
           description: provider.description,
@@ -111,10 +105,8 @@ export class ProviderController {
           value: service.value,
           type: service.type,
           provider: {
+            id: service.provider.id,
             name: service.provider.name,
-            address: service.provider.address,
-            description: service.provider.description,
-            email: service.provider.email,
             rating: service.provider.rating_average
           }
         }))
@@ -148,6 +140,7 @@ export class ProviderController {
           customer: {
             id: appointment?.customer.id,
             name: appointment?.customer.name,
+            avatar: appointment?.customer.avatar,
           },
           service: {
             id: appointment?.service.id,
@@ -177,7 +170,6 @@ export class ProviderController {
       return response.status(200).json({
         success: true,
         provider: {
-          type:'provider',
           name: provider.name,
           address: provider.address,
           description: provider.description,
@@ -193,5 +185,3 @@ export class ProviderController {
     }
   }
 }
-
- 

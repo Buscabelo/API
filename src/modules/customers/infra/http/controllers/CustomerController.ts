@@ -5,11 +5,11 @@ import CreateCustomerService from '@modules/customers/services/CreateCustomerSer
 import GetAllCustomersService from '@modules/customers/services/GetAllCustomersService';
 import FindAppointmentsByCustomerService from '@modules/customers/services/FindAppointmentsByCustomerService';
 
-export class CustomerController{
-  private static INSTANCE : CustomerController;
-   
-   static getInstance(): CustomerController{
-    if (!CustomerController.INSTANCE){
+export class CustomerController {
+  private static INSTANCE: CustomerController;
+
+  static getInstance(): CustomerController {
+    if (!CustomerController.INSTANCE) {
       CustomerController.INSTANCE = new CustomerController();
     }
     return CustomerController.INSTANCE;
@@ -18,20 +18,17 @@ export class CustomerController{
   async getAll(request: Request, response: Response) {
     try {
       const customerService = container.resolve(GetAllCustomersService);
-
       const customers = await customerService.execute()
 
       return response.status(200).json({
         success: true,
         customers: customers?.map(customer => ({
           id: customer?.id,
-          type: 'customer',
           name: customer?.name,
           email: customer?.email,
           avatar: customer?.avatar
         }))
       });
-
     } catch (err) {
       return response.status(400).json({
         success: false,
@@ -43,9 +40,7 @@ export class CustomerController{
   async create(request: Request, response: Response) {
     try {
       const customerService = container.resolve(CreateCustomerService);
-
       const { name, email, password } = request.body;
-
       const customer = await customerService.execute({
         name,
         email,
@@ -56,7 +51,6 @@ export class CustomerController{
         success: true,
         customer: {
           id: customer?.id,
-          type: 'customer',
           name: customer?.name,
           email: customer?.email,
           avatar: customer?.avatar
@@ -91,16 +85,15 @@ export class CustomerController{
           customer: {
             id: appointment?.customer.id,
             name: appointment?.customer.name,
+            avatar: appointment?.customer.avatar
           },
           service: {
             id: appointment?.service.id,
             name: appointment?.service.description,
             value: appointment?.service.value,
           }
-        }
-        ))
+        }))
       });
-
     } catch (err) {
       return response.status(400).json({
         success: false,
@@ -109,4 +102,3 @@ export class CustomerController{
     }
   }
 }
-

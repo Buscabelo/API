@@ -4,10 +4,10 @@ import { container } from 'tsyringe';
 import UploadImageManager from '@modules/services/managers/UploadImageManager';
 
 export class ImageController {
-  private static INSTANCE : ImageController;
+  private static INSTANCE: ImageController;
 
-  static getInstance(): ImageController{
-    if (!ImageController.INSTANCE){
+  static getInstance(): ImageController {
+    if (!ImageController.INSTANCE) {
       ImageController.INSTANCE = new ImageController();
     }
     return ImageController.INSTANCE;
@@ -16,15 +16,20 @@ export class ImageController {
   async UploadImage(request: Request, response: Response) {
     try {
       const uploadImage = container.resolve(UploadImageManager)
-      const {id} = request.params as any;
+      const { id } = request.params as any;
       const image = await uploadImage.execute({
-          service: id,
-          url: request.file?.filename
+        service: id,
+        url: request.file?.filename
       })
 
       return response.json({
         success: true,
-        image
+        image: {
+          url: image.url,
+          service: {
+            id: image.service.id,
+          }
+        }
       });
     } catch (err) {
       return response.status(400).json({

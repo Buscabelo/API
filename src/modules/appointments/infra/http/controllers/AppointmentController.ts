@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
+
 import {parseISO, format, addHours, isBefore} from 'date-fns';
 import CreateAppointmentService from '@modules/appointments/services/CreateAppointmentService';
 import GetAllAppointmentsService from '@modules/appointments/services/GetAllAppointmentsService';
 import GetAppointmentByIdService from '@modules/appointments/services/GetAppointmentByIdService';
 import UpdateAppointmentService from '@modules/appointments/services/UpdateAppointmentService';
-import { container } from 'tsyringe';
-import AppointmentRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentRepository';
 
 export class AppointmentController{ 
   private static INSTANCE : AppointmentController;
@@ -18,10 +18,8 @@ export class AppointmentController{
   }
 
   async getAll(request: Request, response: Response){
-    const appointmentRepository =  new AppointmentRepository();
-    try{
-      const service = new GetAllAppointmentsService(appointmentRepository);
-
+    try {
+      const service = container.resolve(GetAllAppointmentsService);
       const appointments = await service.execute();
      
       return response.status(200).json({
@@ -36,13 +34,11 @@ export class AppointmentController{
       });
     }
   }
-  
+
   async getById(request: Request, response: Response) {
-    const appointmentRepository =  new AppointmentRepository();
     try {
       const { id } = request.params;
-      const appoinmentService = new GetAppointmentByIdService(appointmentRepository);
-      
+      const appoinmentService = container.resolve(GetAppointmentByIdService);
       const appointment = await appoinmentService.execute(Number(id));
     
       return response.status(200).json({
@@ -78,13 +74,12 @@ export class AppointmentController{
   }
 
   async finish(request: Request, response: Response){
-    const appointmentRepository =  new AppointmentRepository();
     try {
       const {time_done_at} = request.body;
       const { id } = request.params;
       const timeNowParsed = parseISO(format(new Date, 'yyyy-MM-dd HH:mm:ss'));
-      const appointmentService = new UpdateAppointmentService(appointmentRepository);
-      const getAppointmentService = new GetAppointmentByIdService(appointmentRepository);
+      const appointmentService = container.resolve(UpdateAppointmentService);
+      const getAppointmentService = container.resolve(GetAppointmentByIdService);
       await getAppointmentService.execute(Number(id)).then((currentAppointment) => {
         if (currentAppointment?.canceled_at !== null){
           throw new Error ('Appointment is already canceled');
@@ -113,13 +108,12 @@ export class AppointmentController{
   } 
   
   async cancel(request: Request, response: Response){
-    const appointmentRepository =  new AppointmentRepository();
     const path = request.path
     try {
       const { canceled_at } = request.body;
       const { id } = request.params;
-      const appointmentService = new UpdateAppointmentService(appointmentRepository);
-      const getAppointmentService = new GetAppointmentByIdService(appointmentRepository);
+      const appointmentService = container.resolve(UpdateAppointmentService);
+      const getAppointmentService = container.resolve(GetAppointmentByIdService);
       await getAppointmentService.execute(Number(id)).then((currentAppointment) => {
         if (currentAppointment?.canceled_at !== null){
           throw new Error ('Appointment is already canceled');
@@ -195,15 +189,14 @@ export class AppointmentController{
   } 
 
   async create(request: Request, response: Response){
-    const appointmentRepository =  new AppointmentRepository();
-    try{
+    try {
       const {
         provider, 
         customer, 
         appointment_to, 
         service, 
       } = request.body;
-      
+
       const timeNowParsed = parseISO(format(new Date, 'yyyy-MM-dd'));
       const parsedDate = parseISO(appointment_to); 
 
@@ -214,8 +207,7 @@ export class AppointmentController{
         throw new Error ('Users must be distinct');
       }
     
-      const createAppointment = new CreateAppointmentService(appointmentRepository);
-
+      const createAppointment = container.resolve(CreateAppointmentService);
       const appointment = await createAppointment.execute({
         provider,
         customer,
@@ -223,6 +215,7 @@ export class AppointmentController{
         service,
         scheduled_at: timeNowParsed,
       })
+
       return response.json({
         success: true,
         appointment:{
@@ -252,8 +245,5 @@ export class AppointmentController{
         message: err.message
       });
     }
-    
   } 
-  
 }
-

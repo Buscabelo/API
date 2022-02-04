@@ -1,10 +1,9 @@
-import CustomerRepository from '@modules/customers/infra/typeorm/repositories/CustomerRepository';
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
+
 import CreateCustomerService from '@modules/customers/services/CreateCustomerService';
-import GetAllCustomerService from '@modules/customers/services/GetAllCustomersService';
+import GetAllCustomersService from '@modules/customers/services/GetAllCustomersService';
 import FindAppointmentsByCustomerService from '@modules/customers/services/FindAppointmentsByCustomerService';
-import { container } from "tsyringe";
-import AppointmentRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentRepository';
 
 export class CustomerController{
   private static INSTANCE : CustomerController;
@@ -18,7 +17,7 @@ export class CustomerController{
 
   async getAll(request: Request, response: Response) {
     try {
-      const customerService = container.resolve(GetAllCustomerService);
+      const customerService = container.resolve(GetAllCustomersService);
 
       const customers = await customerService.execute()
 
@@ -72,11 +71,9 @@ export class CustomerController{
   }
 
   async getAppointments(request: Request, response: Response) {
-    const customerRepository = new CustomerRepository();
-    const appointmentRepository = new AppointmentRepository();
     try {
       const { id } = request.params;
-      const customerService = new FindAppointmentsByCustomerService(customerRepository, appointmentRepository);
+      const customerService = container.resolve(FindAppointmentsByCustomerService);
       const appointments = await customerService.execute(id);
 
       return response.status(200).json({

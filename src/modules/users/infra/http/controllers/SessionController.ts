@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
+
 import SessionService from '@modules/users/services/SessionService';
 import CreateCustomerService from '@modules/customers/services/CreateCustomerService';
 import GoogleAuthService from '@modules/customers/services/GoogleAuth';
-import { container } from 'tsyringe';
 
 export class SessionController {
   private static INSTANCE : SessionController;

@@ -1,3 +1,5 @@
+import { inject, injectable } from 'tsyringe';
+
 import Image from '../infra/typeorm/entities/Image';
 import IImageRepository from '../repositories/IImageRepository';
 import IServiceRepository from '../repositories/iServiceRepository';
@@ -9,23 +11,26 @@ interface IImage{
   url: string | undefined,
 }
 
+@injectable()
 export default class UpdateImageManager {
   constructor(
-    private serviceRepository: IServiceRepository,  
+    @inject('ServiceRepository')
+    private serviceRepository: IServiceRepository,
+    @inject('ImageRepository')
     private imageRepository: IImageRepository,
+    @inject('S3StorageProvider')
     private storageProvider: IStorageProvider
-    ){}
-  public async execute(newImage:IImage): Promise<Image>{
+  ) {}
 
+  public async execute(newImage:IImage): Promise<Image>{
     const service = await this.serviceRepository.findById(newImage.service.id);
     if (!service){
       throw new Error('Service not found');
     }
+
     const fileName = await this.storageProvider.saveFile(newImage.url!);
     newImage.url =  `https://buscabelo-cdn.s3.amazonaws.com/${fileName}`
     const image = this.imageRepository.create(newImage);
-    
     return image;
   }
-  
 }

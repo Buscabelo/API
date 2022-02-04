@@ -38,7 +38,6 @@ export default class CustomerRepository implements ICustomerRepository{
     const appointments = await this.appointmentRepository.find({
       customer: {id: id}
     });
-    console.log(appointments);
     return appointments; 
   }
 }

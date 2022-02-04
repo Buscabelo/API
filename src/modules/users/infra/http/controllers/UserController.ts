@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
+
 import UpdateAvatarService from '@modules/users/services/UpdateAvatarService';
-import UserRepository from '../../typeorm/repositories/UserRepository';
-import S3StorageProvider from '@shared/containers/providers/StorageProvider/implementations/S3StorageProvider';
 
 export class UserController {
   private static INSTANCE : UserController;
@@ -14,10 +14,8 @@ export class UserController {
   }
 
   async UpdateAvatar(request: Request, response: Response) {
-    const userRepository = new UserRepository();
-    const storageRepository = new S3StorageProvider();
     try {
-      const updateAvatar = new UpdateAvatarService(userRepository, storageRepository);
+      const updateAvatar = container.resolve(UpdateAvatarService);
       const user = await updateAvatar.execute({
         user_id: request.user.id,
         avatarFileName: request.file!.filename,

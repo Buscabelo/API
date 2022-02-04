@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
+
 import UploadImageManager from '@modules/services/managers/UploadImageManager';
-import ImageRepository from '@modules/services/infra/typeorm/repositories/ImageRepository'
-import S3StorageProvider from '@shared/containers/providers/StorageProvider/implementations/S3StorageProvider';
-import ServiceRepository from '../../typeorm/repositories/ServiceRepository';
 
 export class ImageController {
   private static INSTANCE : ImageController;
@@ -15,11 +14,8 @@ export class ImageController {
   }
 
   async UploadImage(request: Request, response: Response) {
-    const imageRepository = new ImageRepository();
-    const serviceRepository = new ServiceRepository();
-    const storageRepository = new S3StorageProvider();
     try {
-      const uploadImage = new UploadImageManager(serviceRepository, imageRepository, storageRepository)
+      const uploadImage = container.resolve(UploadImageManager)
       const {id} = request.params as any;
       const image = await uploadImage.execute({
           service: id,
@@ -30,14 +26,11 @@ export class ImageController {
         success: true,
         image
       });
-    }
-    catch (err) {
+    } catch (err) {
       return response.status(400).json({
         success: false,
         message: err.message,
       });
     }
-
   }
 }
-

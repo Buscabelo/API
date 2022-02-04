@@ -1,9 +1,13 @@
+import { inject, injectable } from 'tsyringe';
+
 import IProviderRepository from '../repositories/IProviderRepository';
 
+@injectable()
 export default class FindProviderByIdService {
   constructor(
+    @inject('ProviderRepository')
     private providerRepository: IProviderRepository
-    ){}
+  ) {}
 
   public async execute(id: string) {
     const provider = await this.providerRepository.findById(id);
@@ -14,5 +18,4 @@ export default class FindProviderByIdService {
 
     return provider;
   }
-
 }

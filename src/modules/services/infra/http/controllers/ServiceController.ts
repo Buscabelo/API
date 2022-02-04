@@ -1,12 +1,12 @@
 import { Request, Response, } from 'express';
+import { container } from 'tsyringe';
+
 import DeleteServiceManager from '@modules/services/managers/DeleteServiceManager';
 import FilterByNameManager from '@modules/services/managers/FilterByNameManager';
 import FindByProviderManager from '@modules/services/managers/FindByProviderManager';
 import FindServiceByIdManager from '@modules/services/managers/FindServiceByIdManager';
 import UpdateServiceManager from '@modules/services/managers/UpdateServiceManager';
 import CreateServiceManager from '@modules/services/managers/CreateServiceManager';
-import ServiceRepository from '../../typeorm/repositories/ServiceRepository';
-import CustomerRepository from '@modules/customers/infra/typeorm/repositories/CustomerRepository';
 
 export class ServiceController {
   private static INSTANCE : ServiceController;
@@ -19,9 +19,8 @@ export class ServiceController {
   }
 
   async getAll(request: Request, response: Response) {
-    const serviceRepository = new ServiceRepository();
     try {
-      const serviceManager = new FindByProviderManager(serviceRepository);
+      const serviceManager = container.resolve(FindByProviderManager);
 
       const services = await serviceManager.execute(request.user.id)
       return response.status(200).json({
@@ -48,10 +47,9 @@ export class ServiceController {
   }
 
   async getById(request: Request, response: Response) {
-    const serviceRepository = new ServiceRepository();
     try {
       const { id } = request.params;
-      const serviceManager = new FindServiceByIdManager(serviceRepository);
+      const serviceManager = container.resolve(FindServiceByIdManager);
 
       const service = await serviceManager.execute(Number(id));
 
@@ -79,11 +77,10 @@ export class ServiceController {
   }
 
   async filterName(request: Request, response: Response) {
-    const serviceRepository = new ServiceRepository();
     try {
       let name = request.query["name"];
 
-      const manager = new FilterByNameManager(serviceRepository);
+      const manager = container.resolve(FilterByNameManager);
       const services = await manager.execute(name);
 
       return response.status(200).json({
@@ -109,14 +106,9 @@ export class ServiceController {
   }
 
   async create(request: Request, response: Response) {
-    const serviceRepository = new ServiceRepository();
-    const providerRepository = new CustomerRepository();
-
     try {
       const { name, description, value, provider } = request.body;
-
-      const createService = new CreateServiceManager(serviceRepository, providerRepository);
-
+      const createService = container.resolve(CreateServiceManager);
       const service = await createService.execute({
         name,
         description,
@@ -148,11 +140,10 @@ export class ServiceController {
   }
 
   async update(request: Request, response: Response) {
-    const serviceRepository = new ServiceRepository();
     try {
       const { name, description, value, provider } = request.body;
       const { id } = request.params;
-      const manager = new UpdateServiceManager(serviceRepository);
+      const manager = container.resolve(UpdateServiceManager);
       const service = await manager.execute(Number(id), {
         name,
         description,
@@ -173,10 +164,9 @@ export class ServiceController {
   }
 
   async remove(request: Request, response: Response) {
-    const serviceRepository = new ServiceRepository();
     try {
       const { id } = request.params;
-      const manager = new DeleteServiceManager(serviceRepository);
+      const manager = container.resolve(DeleteServiceManager);
       const service = await manager.execute(Number(id))
 
       return response.status(200).json({
@@ -192,5 +182,3 @@ export class ServiceController {
     }
   }
 }
-
-

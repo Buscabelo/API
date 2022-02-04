@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
+
 import CreateProviderService from '@modules/providers/services/CreateProviderService';
 import FilterByNameService from '@modules/providers/services/FilterByNameService';
 import FindAppointmentsByProviderService from '@modules/providers/services/FindAppointmentsByProviderService';
 import FindProviderByIdService from '@modules/providers/services/FindProviderByIdService';
 import FindServicesByProviderService from '@modules/providers/services/FindServicesByProviderService';
 import GetAllProvidersService from '@modules/providers/services/GetAllProvidersService';
-import ProviderRepository from '../../typeorm/repositories/ProviderRepository';
-import AppointmentRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentRepository';
 
 export class ProviderController {
   private static INSTANCE : ProviderController;
@@ -19,10 +19,8 @@ export class ProviderController {
   }
 
   async getAll(request: Request, response: Response) {
-    const providerRepository = new ProviderRepository();
     try {
-      const providerService = new GetAllProvidersService(providerRepository);
-
+      const providerService = container.resolve(GetAllProvidersService);
       const providers = await providerService.execute()
 
       return response.status(200).json({
@@ -47,12 +45,9 @@ export class ProviderController {
   }
 
   async filterName(request: Request, response: Response) {
-    const providerRepository = new ProviderRepository();
     try {
-      let name = request.query["name"];
-
-      const providerService = new FilterByNameService(providerRepository)
-
+      const name = request.query['name'];
+      const providerService = container.resolve(FilterByNameService);
       const providers = await providerService.execute(name);
 
       return response.status(200).json({
@@ -76,10 +71,9 @@ export class ProviderController {
   }
 
   async getById(request: Request, response: Response) {
-    const providerRepository = new ProviderRepository();
     try {
       const { id } = request.params;
-      const providerService = new FindProviderByIdService(providerRepository);
+      const providerService = container.resolve(FindProviderByIdService);
 
       const provider = await providerService.execute(id);
 
@@ -103,11 +97,9 @@ export class ProviderController {
   }
 
   async getServices(request: Request, response: Response) {
-    const providerRepository = new ProviderRepository();
     try {
       const { id } = request.params;
-      const providerService = new FindServicesByProviderService(providerRepository);
-
+      const providerService = container.resolve(FindServicesByProviderService);
       const services = await providerService.execute(id);
 
       return response.status(200).json({
@@ -136,12 +128,9 @@ export class ProviderController {
   }
 
   async getAppointments(request: Request, response: Response) {
-    const providerRepository = new ProviderRepository();
-    const appoinmentRepository = new AppointmentRepository();
     try {
       const { id } = request.params;
-      const service = new FindAppointmentsByProviderService(providerRepository, appoinmentRepository);
-
+      const service = container.resolve(FindAppointmentsByProviderService);
       const appointments = await service.execute(id);
 
       return response.status(200).json({
@@ -176,12 +165,9 @@ export class ProviderController {
   }
 
   async create(request: Request, response: Response) {
-    const providerRepository = new ProviderRepository();
     try {
-      const service = new CreateProviderService(providerRepository);
-
+      const service = container.resolve(CreateProviderService);
       const { name, email, password } = request.body;
-
       const provider = await service.execute({
         name,
         email,

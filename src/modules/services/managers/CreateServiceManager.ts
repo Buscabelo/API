@@ -1,7 +1,8 @@
+import { inject, injectable } from 'tsyringe';
+
 import Provider from '@modules/providers/infra/typeorm/entities/Provider';
 import Service from '@modules/services/infra/typeorm/entities/Service';
 import IServiceRepository from '../repositories/iServiceRepository';
-import IProviderRepository from '@modules/customers/repositories/ICustomerRepository';
 import ICustomerRepository from '@modules/customers/repositories/ICustomerRepository';
 
 interface IService{
@@ -11,14 +12,16 @@ interface IService{
   provider: Provider;
 }
 
+@injectable()
 export default class CreateServiceManager{
-    constructor(
+  constructor(
+    @inject('ServiceRepository')
     private serviceRepository : IServiceRepository, 
+    @inject('ProviderRepository')
     private providerRepository : ICustomerRepository
-    ){}
+  ) {}
 
   public async execute(newService:IService): Promise<Service> {
-   
     const checkIsCustomer =  await this.providerRepository.findById(newService.provider.id);
 
     // if(checkIsCustomer){
@@ -26,7 +29,6 @@ export default class CreateServiceManager{
     // }
 
     const service = this.serviceRepository.create(newService);
-
     return service;
   }
 }

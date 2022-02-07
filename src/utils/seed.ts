@@ -22,13 +22,13 @@ function createUser(type: string) {
   let entitie = {
     id: uuid,
     name: entitie_name,
+    type: type,
     email: `${entitie_name.replace(/\s/g, "")}@email.com`,
     password: uuid,
     avatar: null,
     description: `O ${entitie_name.toLowerCase()} foi gerado automaticamente.`,
     address: null,
-    rating_average: null,
-    type: type
+    rating_average: parseFloat("0.0"),
   }
 
   return entitie
@@ -130,7 +130,7 @@ async function init() {
   await conn.createQueryBuilder().delete().from("user").execute()
   await conn.createQueryBuilder().delete().from("image").execute()
   await conn.createQueryBuilder().delete().from("rating").execute()
-
+  
   const user_insert_cursor = conn.createQueryBuilder().insert().into("user").values([...entities.Estabelecimento, ...entities.Consumidor])
   const service_insert_cursor = conn.createQueryBuilder().insert().into("service").values(entities.Service)
   const appointment_insert_cursor = conn.createQueryBuilder().insert().into("appointment").values(entities.Appointment)

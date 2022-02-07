@@ -102,9 +102,9 @@ async function init() {
     password: "root",
     database: "buscabelo",
     synchronize: true,
-    logging: false,
+    logging: true,
     entities: [
-        "C:\Users\yan\Documents\www\API1\src\modules/**/infra/typeorm/entities/*.ts"
+        "../modules/**/infra/typeorm/entities/*.ts"
     ]
   }).then(() => console.log('Successfully connected with seed database !!'));
 

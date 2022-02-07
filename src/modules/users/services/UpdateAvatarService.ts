@@ -13,7 +13,7 @@ export default class UpdateAvatarService {
   constructor(
     @inject('UserRepository')
     private userRepository: IUserRepository,
-    @inject('S3StorageProvider')
+    @inject('StorageProvider')
     private storageProvider: IStorageProvider
   ) {}
 

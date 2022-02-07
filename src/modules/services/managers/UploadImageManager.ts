@@ -18,7 +18,7 @@ export default class UpdateImageManager {
     private serviceRepository: IServiceRepository,
     @inject('ImageRepository')
     private imageRepository: IImageRepository,
-    @inject('S3StorageProvider')
+    @inject('StorageProvider')
     private storageProvider: IStorageProvider
   ) {}
 

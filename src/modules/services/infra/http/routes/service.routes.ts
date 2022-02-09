@@ -10,7 +10,7 @@ const upload =  multer(uploadingConfig);
 const controller = ServiceController.getInstance();
 const imageController = ImageController.getInstance();
 
-serviceRouter.get('/search', controller.filterName);
+serviceRouter.get('/search', controller.filters);
 serviceRouter.get('/', ensureAuthenticated, controller.getAll);
 serviceRouter.get('/:id', controller.getById);
 serviceRouter.post('/', ensureAuthenticated, controller.create);

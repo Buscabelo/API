@@ -77,12 +77,9 @@ export class ServiceController {
   }
 
   async filters(request: Request, response: Response) {
-    const serviceRepository = new ServiceRepository();
     try {
-
       let { name, maxPrice, minPrice, serviceType } = request.query;
-      
-      const manager = new FindServiceByFilterManager(serviceRepository);
+      const manager = container.resolve(FindServiceByFilterManager);
       const services = await manager.execute(name, maxPrice, minPrice, serviceType);
 
       return response.status(200).json({

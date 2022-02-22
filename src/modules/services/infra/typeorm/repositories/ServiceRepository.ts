@@ -12,6 +12,7 @@ export default class ServiceRepository implements IServiceRepository {
     this.ormRepository = getRepository(Service);
     this.providerRepository = getRepository(Provider);
   }
+
   public async create(serviceDTO: IServiceDTO): Promise<Service> {
     const service = await this.ormRepository.create(serviceDTO);
     const provider = await this.providerRepository.findOne({
@@ -22,6 +23,7 @@ export default class ServiceRepository implements IServiceRepository {
 
     return service;
   }
+
   public async findByProvider(provider: string): Promise<Service[] | undefined> {
     const services = await this.ormRepository.find({
       where: {
@@ -31,10 +33,12 @@ export default class ServiceRepository implements IServiceRepository {
 
     return services;
   }
+
   public async findById(id: number): Promise<Service | undefined> {
     const service = this.ormRepository.findOne(id);
     return service;
   }
+
   public async filterByName(name: any): Promise<Service[] | undefined> {
     const services = await this.ormRepository.find({
       name: ILike(`%${name}%`)
@@ -43,30 +47,23 @@ export default class ServiceRepository implements IServiceRepository {
   }
 
   public async filterByArguments(name: string | null = null, maxPrice: number | null = null, minPrice: number | null = null, serviceType: string | null = null): Promise<Service[] | undefined> {
-
-    let query: any = { "where": {} }
+    let query: any = { 'where': {} }
 
     if (maxPrice && minPrice) {
-
-      query["where"]["value"] = Between(minPrice, maxPrice)
-
+      query['where']['value'] = Between(minPrice, maxPrice)
     } else {
-
-      
-      if (maxPrice) query["where"]["value"] = LessThan(Number(maxPrice))
-      if (minPrice) query["where"]["value"] = MoreThan(Number(minPrice))
-      
+      if (maxPrice) query['where']['value'] = LessThan(Number(maxPrice))
+      if (minPrice) query['where']['value'] = MoreThan(Number(minPrice))
     }
 
     if (name) {
-      query["where"]["name"]= ILike(`%${name}%`)
+      query['where']['name'] = ILike(`%${name}%`)
     }
 
     if (serviceType) {
-      query["where"]["type"] = serviceType
+      query['where']['type'] = serviceType
     }
 
-    
     const services = await this.ormRepository.find(query)
     return services;
   }
@@ -77,6 +74,7 @@ export default class ServiceRepository implements IServiceRepository {
 
     return service;
   }
+
   public async delete(id: number): Promise<Service | undefined> {
     const service = this.ormRepository.findOne(id);
     this.ormRepository.delete(id);

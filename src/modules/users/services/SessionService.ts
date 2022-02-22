@@ -1,9 +1,9 @@
 import { compare } from 'bcryptjs';
-import {sign} from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 import User from '../infra/typeorm/entities/User';
 import authConfig from '@config/auth'
 import IUserRepository from '../repositories/IUserRepository'
-import { inject, injectable } from 'tsyringe';
+import { injectable, inject } from 'tsyringe';
 
 interface Request{
   email:string,

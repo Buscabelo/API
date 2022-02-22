@@ -1,7 +1,7 @@
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment'
 import IAppointmentRepository from '@modules/appointments/repositories/IAppointmentRepository';
 import IAppointmentDTO from '@modules/appointments/dtos/IAppointmentDTO';
-import {isEqual} from 'date-fns'
+import { isEqual } from 'date-fns'
 
 export default class AppointmentRepository implements IAppointmentRepository{
   private appointments: Appointment [] = [];

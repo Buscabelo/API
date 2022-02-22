@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import Service from '../infra/typeorm/entities/Service';
 import IServiceRepository from '../repositories/iServiceRepository';
 
-@injectable
+@injectable()
 export default class FindServiceByFilterManager {
   constructor(
     @inject('ServiceRepository')

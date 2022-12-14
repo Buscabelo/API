@@ -12,7 +12,7 @@
 Abra o terminal e ultilize o comando abaixo para instalar as dependências:
 
 ```sh
-$ yard
+$ yarn
 ```
 
 Após isso, ultize o comando:

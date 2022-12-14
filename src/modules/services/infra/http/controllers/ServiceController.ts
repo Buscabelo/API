@@ -127,13 +127,14 @@ export class ServiceController {
 
   async create(request: Request, response: Response) {
     try {
-      const { name, description, value, provider } = request.body;
+      const { name, description, value, provider, type } = request.body;
       const createService = container.resolve(CreateServiceManager);
       const service = await createService.execute({
         name,
         description,
         value,
         provider,
+        type
       });
 
       return response.status(200).json({
@@ -160,7 +161,7 @@ export class ServiceController {
 
   async update(request: Request, response: Response) {
     try {
-      const { name, description, value, provider } = request.body;
+      const { name, description, value, provider, type } = request.body;
       const { id } = request.params;
       const manager = container.resolve(UpdateServiceManager);
       const service = await manager.execute(Number(id), {
@@ -168,6 +169,7 @@ export class ServiceController {
         description,
         value,
         provider,
+        type
       });
 
       return response.status(200).json({

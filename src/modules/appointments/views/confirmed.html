@@ -4,11 +4,55 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmed</title>
+    <title>Buscabelo - Confirmação</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container{
+            background-color: #f2b705;   
+            width: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .logo{
+            width: 50%;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            background-color: #f2b705;
+        }
+        .banner{
+            width: 50%;
+            height: 500px;
+            display: flex;
+            font-family: Helvetica;
+            flex-direction: column;
+            align-items: center;
+            font-size: 3em;
+            background-color: #f2b705;
+        }
+        .banner img{
+            margin-top: 20px;
+        }
+        .banner p{
+            height: 50px;
+            color: rgb(83, 7, 83);
+        }
+    </style>
 </head>
 <body>
-    <script>
-        alert("agendamento confirmado");
-    </script>
+    <div class="container">
+        <div class="logo">
+            <img src="../../../images/Buscabelo_logo.png" width="400px" >
+        </div>
+        <div class="banner">
+            <p>Agendamento confimado!</p>
+            <img src="../../../images/green.png" height="300px">
+        </div>
+    </div>
 </body>
 </html>

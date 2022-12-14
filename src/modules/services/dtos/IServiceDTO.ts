@@ -5,4 +5,5 @@ export default interface IServiceDTO{
   description: string;
   value: number;
   provider: Provider;
+  type?: string;
 }

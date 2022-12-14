@@ -5,12 +5,13 @@ import Provider from '@modules/providers/infra/typeorm/entities/Provider';
 import Image from './Image';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 
-export enum Type{
+export enum Type {
   Haircut = 'Corte',
   Haircare = 'Tratamento',
   Barb = 'Barba',
-  Default = ''
+  Default = '',
 }
+
 @Entity()
 export default class Service {
   @PrimaryGeneratedColumn()

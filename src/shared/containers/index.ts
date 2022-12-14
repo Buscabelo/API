@@ -63,5 +63,5 @@ container.registerSingleton<IMailTemplateProvider>(
   
   container.registerInstance<IMailProvider>(
     "MailProvider",
-    container.resolve(SESEmailProvider),
+    container.resolve(EtherealMailProvider),
   );

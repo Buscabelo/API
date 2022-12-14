@@ -168,13 +168,15 @@ export class ProviderController {
   async create(request: Request, response: Response) {
     try {
       const service = container.resolve(CreateProviderService);
-      const { name, email, password, description, address } = request.body;
+      const { name, email, password, description, address, latitude, longitude } = request.body;
       const provider = await service.execute({
         name,
         email,
         password,
         description,
-        address
+        address,
+        latitude,
+        longitude,
       });
 
       return response.status(200).json({
@@ -185,7 +187,9 @@ export class ProviderController {
           address: provider.address,
           description: provider.description,
           email: provider.email,
-          rating: provider.rating_average
+          rating: provider.rating_average,
+          latitude: provider.latitude,
+          longitude: provider.longitude,
         }
       });
     } catch (err) {

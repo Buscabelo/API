@@ -82,7 +82,7 @@ export class AppointmentController {
           customer: {
             id: appointment?.customer.id,
             name: appointment?.customer.name,
-            avatar: appointment?.provider.avatar
+            avatar: appointment?.customer.avatar
           },
           service: {
             id: appointment?.service.id,
@@ -376,8 +376,6 @@ export class AppointmentController {
       const appointment = await appointmentService.execute(Number(id), {
         confirmed: true,
       })
-      console.log(appointment?.confirmed);
-
       return response.sendFile(path.join(
         __dirname,
         '..',

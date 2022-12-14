@@ -89,7 +89,7 @@ export class CustomerController {
           },
           service: {
             id: appointment?.service.id,
-            name: appointment?.service.description,
+            name: appointment?.service.name,
             value: appointment?.service.value,
           }
         }))

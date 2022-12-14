@@ -20,7 +20,9 @@ export default class CustomerRepository implements ICustomerRepository{
       return customer;
   }
   public async findById(id: string): Promise<Customer | undefined>{
-    const customer = await this.ormRepository.findOne(id);
+    const customer = await this.ormRepository.findOne({
+      where: {id}
+    });
     return customer;
   }
   public async find(): Promise<Customer[] | undefined>{

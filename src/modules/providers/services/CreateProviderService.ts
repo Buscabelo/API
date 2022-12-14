@@ -29,7 +29,9 @@ export default class CreateProviderService {
       email: newProvider.email,
       password: hashedPassword,
       description: newProvider.description,
-      address: newProvider.address
+      address: newProvider.address,
+      latitude: newProvider.latitude,
+      longitude: newProvider.longitude
     });
   
     provider.then(provider => {

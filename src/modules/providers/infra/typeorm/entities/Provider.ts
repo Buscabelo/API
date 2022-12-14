@@ -12,6 +12,12 @@ export default class Provider extends User {
   @Column()
   address: string;
 
+  @Column({default: -5.81164, type: 'float'})
+  latitude: number;
+
+  @Column({default: -35.20317, type: 'float'})
+  longitude: number;
+
   @Column({default: 5})
   rating_average: number;
 
